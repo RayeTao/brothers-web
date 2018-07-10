@@ -1,0 +1,13 @@
+server:
+  port: 8081
+  context-path: /
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/brothers?useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: egova
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
