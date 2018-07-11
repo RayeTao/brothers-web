@@ -5,6 +5,8 @@ import com.taoran.brothers.media.pojo.Media;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by taoran
  * date: 2018-07-05 17:56
@@ -20,4 +22,7 @@ public class MediaService {
     }
 
 
+    public List<Media> findByUserId(int userId) {
+       return mediaDAO.findByUserId(userId);
+    }
 }

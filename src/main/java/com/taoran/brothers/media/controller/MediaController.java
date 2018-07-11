@@ -1,5 +1,6 @@
 package com.taoran.brothers.media.controller;
 
+import com.sun.deploy.net.HttpResponse;
 import com.taoran.brothers.common.ResultInfo;
 import com.taoran.brothers.media.pojo.Media;
 import com.taoran.brothers.media.service.MediaService;
@@ -14,7 +15,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 
@@ -56,6 +65,9 @@ public class MediaController {
             resultInfo.setMessage("图片上传成功");
             resultInfo.setSuccess(true);
             resultInfo.setCode(0);
+        }else{
+            resultInfo.setMessage("图片上传失败");
+            resultInfo.setSuccess(false);
         }
 
 
@@ -63,9 +75,8 @@ public class MediaController {
     }
 
     public boolean saveFile(int userId,String userName,MultipartFile file){
-        logger.info("存放目录："+userName);
-        //String filePath = "E:/images/"+userName+"/";   //windows路径
-        String filePath = "/apps/MediaRoot/images/"+userName+"/"; //linux路径
+        String filePath = userName+"/";   //windows路径
+        //String filePath = "/apps/MediaRoot/images/"+userName+"/"; //linux路径
         File mediaFile = new File(filePath);
         if(!mediaFile.exists()){
             mediaFile.mkdirs();
@@ -86,7 +97,8 @@ public class MediaController {
                 media.setMediaType(file.getContentType());
                 media.setSize(file.getSize());
                 media.setUserId(userId);
-                media.setMediaUrl(saveFilePath);
+
+                media.setMediaUrl("http://localhost/images/"+saveFilePath);
                 mediaService.save(media);
                 return true;
             }catch (Exception e){
@@ -95,5 +107,56 @@ public class MediaController {
             }
         }
         return false;
+    }
+
+    /**
+     * 获取多媒体列表
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "/getMediaList",method = RequestMethod.GET)
+    public ResultInfo getMediaList(@RequestParam("userId") int userId){
+        ResultInfo resultInfo = new ResultInfo();
+        List<Media> list = mediaService.findByUserId(userId);
+        if(list != null && list.size()>0){
+            resultInfo.setCode(0);
+            resultInfo.setSuccess(true);
+            Map<String,Object> map = new HashMap<String,Object>();
+            map.put("resultList",list);
+            resultInfo.setData(map);
+        }else{
+            resultInfo.setSuccess(false);
+        }
+        return resultInfo;
+    }
+
+    /**
+     * 下载多媒体
+     * @param mediaUrl
+     * @return
+     */
+    @RequestMapping(value = "download",method = RequestMethod.GET)
+    public ResultInfo downloadMedia(@RequestParam("mediaUrl") String  mediaUrl, @RequestParam("size") int size, HttpServletResponse response){
+        ResultInfo resultInfo = new ResultInfo();
+        try{
+            File file = new File(mediaUrl);
+            OutputStream out = response.getOutputStream();
+            FileInputStream in = new FileInputStream(file);
+            byte[] buf = new byte[size];
+            int len = -1;
+            while((len=in.read(buf))!=-1){
+                out.write(buf,0,len);
+            }
+            in.close();
+            out.close();
+            Map<String,Object> map = new HashMap<>();
+            map.put("result",buf);
+            resultInfo.setSuccess(true);
+            resultInfo.setData(map);
+
+        }catch (Exception e){
+            resultInfo.setSuccess(false);
+        }
+        return resultInfo;
     }
 }
