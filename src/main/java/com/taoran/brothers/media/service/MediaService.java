@@ -66,8 +66,12 @@ public class MediaService {
         return resultInfo;
     }
     public boolean saveFile(int userId,String userName,MultipartFile file){
-        String basePath = "E:/git/brothers/MediaRoot/images/";//windows路径
-        //String basePath = "/apps/MediaRoot/images/"; //linux路径
+
+        String basePath = "";
+        SysConfig sysConfigPath = sysConfigDAO.findByConfigName(Constant.CONFIG_IMAGE_BASE_FILE_PATH);
+        if(sysConfigPath != null ){
+            basePath = sysConfigPath.getConfigValue();
+        }
 
         String filePath =  userName+"/";
         File mediaFile = new File(basePath+filePath);
@@ -92,9 +96,9 @@ public class MediaService {
                 media.setUserId(userId);
 
                 //获取图片服务器的地址
-                SysConfig sysConfig = sysConfigDAO.findByConfigName(Constant.CONFIG_IMAGE_BASE_URL);
-                if(sysConfig != null){
-                    media.setMediaUrl(sysConfig.getConfigValue()+filePath + uuid + mediaType);
+                SysConfig sysConfigUrl = sysConfigDAO.findByConfigName(Constant.CONFIG_IMAGE_BASE_URL);
+                if(sysConfigUrl != null){
+                    media.setMediaUrl(sysConfigUrl.getConfigValue()+filePath + uuid + mediaType);
                 }
                 mediaDAO.save(media);
                 return true;

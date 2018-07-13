@@ -6,5 +6,6 @@ package com.taoran.brothers.common;
  */
 public class Constant {
 
-    public static  final String CONFIG_IMAGE_BASE_URL = "IMG_BASE_URL";
+    public static  final String CONFIG_IMAGE_BASE_URL = "IMG_BASE_URL";//图片服务器url
+    public static  final String CONFIG_IMAGE_BASE_FILE_PATH = "IMG_BASE_FILE_PATH";//图片本地路径
 }
