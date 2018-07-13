@@ -15,12 +15,18 @@ public class SpringBootStartApplication {
 	}
 
 	/**
-	 * 文件上传临时路径
+	 * 文件上传配置
+	 *
+	 * @return
 	 */
 	@Bean
-	MultipartConfigElement multipartConfigElement() {
+	public MultipartConfigElement multipartConfigElement() {
 		MultipartConfigFactory factory = new MultipartConfigFactory();
-		factory.setLocation("E:/git/brothers/MediaRoot/images/");
+		//  单个数据大小
+		factory.setMaxFileSize("10240KB"); // KB,MB
+		/// 总上传数据大小
+		factory.setMaxRequestSize("102400KB");
 		return factory.createMultipartConfig();
 	}
+
 }

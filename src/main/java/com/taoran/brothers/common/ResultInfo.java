@@ -11,7 +11,7 @@ public class ResultInfo {
     private  int code;
     private String message;
     private boolean success;
-    private Map<String,Object> data;
+    private Object data;
 
     public int getCode() {
         return code;
@@ -29,11 +29,11 @@ public class ResultInfo {
         this.message = message;
     }
 
-    public Map<String, Object> getData() {
+    public Object getData() {
         return data;
     }
 
-    public void setData(Map<String, Object> data) {
+    public void setData(Object data) {
         this.data = data;
     }
 

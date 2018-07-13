@@ -1,4 +1,4 @@
-package com.taoran.brothers.common;
+package com.taoran.brothers.sysconfig.pojo;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

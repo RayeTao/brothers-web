@@ -26,39 +26,13 @@ public class LoginController {
      * 用户登录
      * @param username
      * @param password
-     * @param request
-     * @param response
      * @return
      * @throws Exception
      */
     @RequestMapping(value = "/doLogin",method = RequestMethod.GET)
     @ResponseBody
-    public ResultInfo doLogin(@RequestParam("username") String username, @RequestParam("password") String password,
-                              HttpServletRequest request, HttpServletResponse response) throws Exception{
-       // response.setHeader("Access-Control-Allow-Origin", "*");
-        ResultInfo result = new ResultInfo();
-       User user = userService.findByUserName(username);
-       logger.info("用户名为："+username+",长度："+username.length());
-       if(user==null){
-           result.setCode(-1);
-           result.setSuccess(false);
-           result.setMessage("用户不存在");
-       }else{
-           user = userService.findByUserNameAndPassword(username,password);
-           if(user==null){
-               result.setCode(1);
-               result.setSuccess(false);
-               result.setMessage("用户密码错误");
-           }else{
-               result.setCode(0);
-               result.setSuccess(true);
-               result.setMessage("用户登录成功");
-               Map<String,Object> userInfo = new HashMap<String,Object>();
-               userInfo.put("data",user);
-               result.setData(userInfo);
-           }
-       }
-        return result;
+    public ResultInfo doLogin(@RequestParam  String username, @RequestParam  String password) throws Exception{
+        return userService.login(username,password);
     }
 
     /**
@@ -70,27 +44,7 @@ public class LoginController {
      */
     @RequestMapping(value="/resetPassword",method = RequestMethod.GET)
     @ResponseBody
-    public ResultInfo resetPsw(@RequestParam("username") String username, @RequestParam("oldPassword") String oldPassword, @RequestParam("newPassword") String newPassword ){
-        ResultInfo result = new ResultInfo();
-        User user = userService.findByUserNameAndPassword(username,oldPassword);
-        if(user == null ){
-            result.setCode(-1);
-            result.setSuccess(false);
-            result.setMessage("原始密码输入错误");
-        }else{
-            User newUser = new User();
-            user.setUserName(username);
-            user.setPassword(newPassword);
-            User newUser2 = userService.save(user);
-            if(newUser2 != null){
-                result.setCode(0);
-                result.setSuccess(false);
-                result.setMessage("密码修改成功");
-                Map<String,Object> userInfo = new HashMap<String,Object>();
-                userInfo.put("data",newUser2);
-                result.setData(userInfo);
-            }
-        }
-        return result;
+    public ResultInfo resetPsw(@RequestParam String username, @RequestParam String oldPassword, @RequestParam String newPassword )throws Exception{
+     return userService.resetPassword(username,oldPassword,newPassword);
     }
 }

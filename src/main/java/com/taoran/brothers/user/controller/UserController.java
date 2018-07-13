@@ -33,17 +33,7 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/getUserList",method = RequestMethod.GET)
-    public ResultInfo getUserList(){
-        ResultInfo resultInfo = new ResultInfo();
-        //获取用户列表
-        List<User> userList = userService.findByIsShow("1");
-        if(userList!=null && userList.size()>0){
-            Map<String , Object> resultMap = new HashMap<String , Object>();
-            resultMap.put("resultList",userList);
-            resultInfo.setCode(0);
-            resultInfo.setData(resultMap);
-            resultInfo.setSuccess(true);
-        }
-        return resultInfo;
+    public ResultInfo getUserList() throws Exception{
+        return userService.getUserList();
     }
 }
