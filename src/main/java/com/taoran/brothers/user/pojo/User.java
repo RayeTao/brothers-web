@@ -21,6 +21,10 @@ public class User {
     private String remark;
     private String index;
     private String isShow;
+    private Date birthday;
+    private String phone;
+    private String gender;
+    private String address;
 
     public int getUserId() {
         return userId;
@@ -78,16 +82,35 @@ public class User {
         this.isShow = isShow;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", userName='" + userName + '\'' +
-                ", password='" + password + '\'' +
-                ", createTime=" + createTime +
-                ", remark='" + remark + '\'' +
-                ", index='" + index + '\'' +
-                ", isShow='" + isShow + '\'' +
-                '}';
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

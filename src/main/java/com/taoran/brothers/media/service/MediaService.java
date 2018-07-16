@@ -9,6 +9,9 @@ import com.taoran.brothers.sysconfig.pojo.SysConfig;
 import com.taoran.brothers.user.dao.UserDAO;
 import com.taoran.brothers.user.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,14 +38,6 @@ public class MediaService {
     @Autowired
     SysConfigDAO sysConfigDAO;
 
-    public Media save(Media media){
-        return mediaDAO.save(media);
-    }
-
-
-    public List<Media> findByUserId(int userId) {
-       return mediaDAO.findByUserId(userId);
-    }
 
     public ResultInfo uploadMedia(String type,MultipartFile file){
         ResultInfo resultInfo = new ResultInfo();
@@ -110,21 +105,32 @@ public class MediaService {
         return false;
     }
 
-    public ResultInfo getMediaList(String userType){
+    public ResultInfo getMediaList(String userType,int pageNo,int pageSize){
         ResultInfo resultInfo = new ResultInfo();
         User user = userDAO.findByIndex(userType);
         if(user != null ){
-            List<Media> list = mediaDAO.findByUserId(user.getUserId());
-        if(list != null && list.size()>0){
-            resultInfo.setCode(0);
-            resultInfo.setSuccess(true);
             Map<String,Object> map = new HashMap<String,Object>();
-            map.put("resultList",list);
-            resultInfo.setData(map);
-        }else{
-            resultInfo.setSuccess(false);
+            Pageable pageable = new PageRequest(pageNo-1,pageSize);
+            Page<Media> page = mediaDAO.findByUserId(user.getUserId(),pageable);
+            if(page !=null){
+                List<Media> list = page.getContent();
+                if(list != null && list.size()>0){
+                    resultInfo.setCode(0);
+                    resultInfo.setSuccess(true);
+                    map.put("resultList",list);
+                    resultInfo.setData(map);
+                }else{
+                    resultInfo.setSuccess(false);
+                }
+            }
+
+           List<Media> listCount = mediaDAO.findByUserId(user.getUserId());
+            if(listCount != null && listCount.size()>0){
+               map.put("totalCount",listCount.size()) ;
+            }
         }
-        }
+
+
         return resultInfo;
     }
 

@@ -49,8 +49,8 @@ public class MediaController {
      * @return
      */
     @RequestMapping(value = "/getMediaList",method = RequestMethod.GET)
-    public ResultInfo getMediaList(@RequestParam(required = true) String  userType){
-       return mediaService.getMediaList(userType);
+    public ResultInfo getMediaList(@RequestParam(required = true) String  userType,@RequestParam int pageNo,@RequestParam int pageSize){
+       return mediaService.getMediaList(userType,pageNo,pageSize);
     }
 
     /**
