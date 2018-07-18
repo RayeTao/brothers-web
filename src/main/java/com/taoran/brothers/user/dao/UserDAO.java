@@ -3,7 +3,10 @@ package com.taoran.brothers.user.dao;
 
 import com.taoran.brothers.user.pojo.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -21,4 +24,9 @@ public interface UserDAO extends JpaRepository<User,Integer> {
     public User findByIndex(String index);
 
     public List<User> findByIsShow(String isShow);
+
+    @Transactional
+    @Modifying
+    @Query("update User u set u.password=?1 where u.userId=?2")
+    public int updatePasswordByUserId(String password,int userId );
 }

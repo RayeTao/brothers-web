@@ -21,7 +21,7 @@ public class User {
     private String remark;
     private String index;
     private String isShow;
-    private Date birthday;
+    private String birthday;
     private String phone;
     private String gender;
     private String address;
@@ -82,11 +82,11 @@ public class User {
         this.isShow = isShow;
     }
 
-    public Date getBirthday() {
+    public String getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Date birthday) {
+    public void setBirthday(String birthday) {
         this.birthday = birthday;
     }
 

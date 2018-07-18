@@ -3,6 +3,7 @@ package com.taoran.brothers.user.service;
 import com.taoran.brothers.common.ResultInfo;
 import com.taoran.brothers.user.dao.UserDAO;
 import com.taoran.brothers.user.pojo.User;
+import com.taoran.brothers.utils.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,7 +28,7 @@ public ResultInfo login(String username,String password) throws Exception{
         result.setSuccess(false);
         result.setMessage("用户不存在");
     }else{
-        user = userDAO.findByUserNameAndPassword(username,password);
+        user = userDAO.findByUserNameAndPassword(username,MD5Util.MD5LowerCase(password));
         if(user==null){
             result.setCode(1);
             result.setSuccess(false);
@@ -45,22 +46,19 @@ public ResultInfo login(String username,String password) throws Exception{
 }
 public ResultInfo resetPassword( String username, String oldPassword,String newPassword ) throws Exception{
     ResultInfo result = new ResultInfo();
-    User user = userDAO.findByUserNameAndPassword(username,oldPassword);
+    User user = userDAO.findByUserNameAndPassword(username,MD5Util.MD5LowerCase(oldPassword));
     if(user == null ){
         result.setCode(-1);
         result.setSuccess(false);
         result.setMessage("原始密码输入错误");
     }else{
-        User newUser = new User();
-        user.setUserName(username);
-        user.setPassword(newPassword);
-        User newUser2 = userDAO.save(user);
-        if(newUser2 != null){
+        int newUser = userDAO.updatePasswordByUserId(MD5Util.MD5LowerCase(newPassword),user.getUserId());
+        if(newUser != 0){
             result.setCode(0);
             result.setSuccess(false);
             result.setMessage("密码修改成功");
             Map<String,Object> userInfo = new HashMap<String,Object>();
-            userInfo.put("data",newUser2);
+            userInfo.put("data",newUser);
             result.setData(userInfo);
         }
     }
