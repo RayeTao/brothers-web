@@ -1,6 +1,7 @@
 package com.taoran.brothers.media.controller;
 
 import com.taoran.brothers.common.ResultInfo;
+import com.taoran.brothers.media.pojo.Media;
 import com.taoran.brothers.media.service.MediaService;
 import com.taoran.brothers.user.service.UserService;
 import org.slf4j.Logger;
@@ -58,8 +59,42 @@ public class MediaController {
      * @param mediaUrl
      * @return
      */
-    @RequestMapping(value = "download",method = RequestMethod.GET)
-    public ResultInfo downloadMedia(@RequestParam("mediaUrl") String  mediaUrl, @RequestParam("size") int size, HttpServletResponse response) {
-        return mediaService.downloadMedia(mediaUrl, size, response);
+    @RequestMapping(value = "/downloadMedia",method = RequestMethod.GET)
+    public ResultInfo downloadMedia(@RequestParam("mediaUrl") String  mediaUrl) {
+        return mediaService.downloadMedia(mediaUrl);
+    }
+
+    /**
+     * 删除多媒体
+     * @param mediaId
+     * @param localMediaPath
+     * @return
+     */
+    @RequestMapping(value = "/deleteMedia",method = RequestMethod.GET)
+    public ResultInfo deleteMedia(@RequestParam int mediaId,@RequestParam String localMediaPath){
+        return  mediaService.deleteMedia(mediaId,localMediaPath);
+    }
+
+    /**
+     * 收藏多媒体
+     * @param mediaId
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "/collectMedia",method = RequestMethod.GET)
+    public ResultInfo collectMedia(@RequestParam int mediaId,@RequestParam int userId){
+        return mediaService.collectMedia(mediaId,userId);
+    }
+
+    /**
+     * 获取收藏列表
+     * @param userId
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    @RequestMapping(value = "/getCollectMediaList",method = RequestMethod.GET)
+    public ResultInfo getCollectMediaList(@RequestParam int userId,@RequestParam int pageNo,@RequestParam int pageSize){
+        return mediaService.getCollectMediaList(userId,pageNo,pageSize);
     }
 }

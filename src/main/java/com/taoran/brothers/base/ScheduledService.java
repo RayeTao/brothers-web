@@ -28,7 +28,7 @@ public class ScheduledService {
     /**
      * 检查当天是否有人过生日，定时发送短信
      */
-    @Scheduled(cron = "0 0 8 * * ?")
+        @Scheduled(cron = "0 0 8 * * ?")
     public void checkBirth(){
         Date date = new Date();
         //获取当年的年份

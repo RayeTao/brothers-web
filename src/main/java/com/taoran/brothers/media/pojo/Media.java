@@ -1,14 +1,20 @@
 package com.taoran.brothers.media.pojo;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 
 /**
  * Created by taoran
  * date: 2018-07-05 18:19
  */
 @Entity
+@Getter
+@Setter
 public class Media {
     @Id
     @GeneratedValue
@@ -19,60 +25,11 @@ public class Media {
     private String mediaType;
     private Long size;
     private String remark;
+    private String localMediaPath;
 
-    public int getMediaId() {
-        return mediaId;
-    }
+    @Transient
+    private int collectFlag;
+    @Transient
+    private Long collectCount;
 
-    public void setMediaId(int mediaId) {
-        this.mediaId = mediaId;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public String getMediaUrl() {
-        return mediaUrl;
-    }
-
-    public void setMediaUrl(String mediaUrl) {
-        this.mediaUrl = mediaUrl;
-    }
-
-    public String getMediaName() {
-        return mediaName;
-    }
-
-    public void setMediaName(String mediaName) {
-        this.mediaName = mediaName;
-    }
-
-    public String getMediaType() {
-        return mediaType;
-    }
-
-    public void setMediaType(String mediaType) {
-        this.mediaType = mediaType;
-    }
-
-    public Long getSize() {
-        return size;
-    }
-
-    public void setSize(Long size) {
-        this.size = size;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
 }
