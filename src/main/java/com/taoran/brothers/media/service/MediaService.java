@@ -3,8 +3,10 @@ package com.taoran.brothers.media.service;
 import com.taoran.brothers.common.Constant;
 import com.taoran.brothers.common.ResultInfo;
 import com.taoran.brothers.media.dao.CollectMediaDAO;
+import com.taoran.brothers.media.dao.CommentDAO;
 import com.taoran.brothers.media.dao.MediaDAO;
 import com.taoran.brothers.media.pojo.CollectMedia;
+import com.taoran.brothers.media.pojo.Comment;
 import com.taoran.brothers.media.pojo.Media;
 import com.taoran.brothers.sysconfig.dao.SysConfigDAO;
 import com.taoran.brothers.sysconfig.pojo.SysConfig;
@@ -48,6 +50,8 @@ public class MediaService {
     CollectMediaDAO collectMediaDAO;
     @Autowired
     private EntityManager entityManager;
+    @Autowired
+    private CommentDAO commentDAO;
 
 
     public ResultInfo uploadMedia(String type, MultipartFile file) {
@@ -121,7 +125,7 @@ public class MediaService {
         return false;
     }
 
-    public ResultInfo getMediaList(String userType, int pageNo, int pageSize) {
+    public ResultInfo getMediaList(int loginUserId,String userType, int pageNo, int pageSize) {
         ResultInfo resultInfo = new ResultInfo();
         User user = userDAO.findByIndex(userType);
         if (user != null) {
@@ -134,7 +138,7 @@ public class MediaService {
                     for(Media media : list){
                         long count = collectMediaDAO.countByMediaId(media.getMediaId());
                         media.setCollectCount(count);
-                        CollectMedia collectMedia = collectMediaDAO.findByMediaIdAndUserId(media.getMediaId(),user.getUserId());
+                        CollectMedia collectMedia = collectMediaDAO.findByMediaIdAndUserId(media.getMediaId(),loginUserId);
                         if(collectMedia == null){
                             media.setCollectFlag(0);
                         }else{
@@ -230,5 +234,39 @@ public class MediaService {
             resultInfo.setMessage("取消收藏成功");
         }
         return resultInfo;
+    }
+
+    public ResultInfo commentMedia(int userId, int mediaId, String content) {
+        ResultInfo resultInfo = new ResultInfo();
+        Comment comment = new Comment();
+        comment.setUserId(userId);
+        comment.setMediaId(mediaId);
+        comment.setContent(content);
+        comment.setCreateTime(new Date());
+        Comment result = commentDAO.save(comment);
+        if(result != null){
+            resultInfo.setSuccess(true);
+            resultInfo.setMessage("评论成功");
+        }
+        return resultInfo;
+    }
+
+    public ResultInfo  getCommentList(int mediaId,int pageNo,int pageSize){
+        ResultInfo resultInfo = new ResultInfo();
+        Pageable pageable = new PageRequest(pageNo-1,pageSize);
+        Page<Comment> commentPage = commentDAO.findByMediaId(mediaId,pageable);
+
+        if(commentPage != null){
+            List<Comment> list = commentPage.getContent();
+            for(Comment comment : list){
+                User user = userDAO.findOne(comment.getUserId());
+                comment.setUserName(user.getUserName());
+            }
+            Map<String,Object> map = new HashMap<>();
+            map.put("resultList",commentPage.getContent());
+            resultInfo.setSuccess(true);
+            resultInfo.setData(map);
+        }
+        return  resultInfo;
     }
 }

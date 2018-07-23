@@ -50,8 +50,8 @@ public class MediaController {
      * @return
      */
     @RequestMapping(value = "/getMediaList",method = RequestMethod.GET)
-    public ResultInfo getMediaList(@RequestParam(required = true) String  userType,@RequestParam int pageNo,@RequestParam int pageSize){
-       return mediaService.getMediaList(userType,pageNo,pageSize);
+    public ResultInfo getMediaList(@RequestParam int userId,@RequestParam(required = true) String  userType,@RequestParam int pageNo,@RequestParam int pageSize){
+       return mediaService.getMediaList(userId,userType,pageNo,pageSize);
     }
 
     /**
@@ -98,8 +98,37 @@ public class MediaController {
         return mediaService.getCollectMediaList(userId,pageNo,pageSize);
     }
 
-    @RequestMapping(value = "cancelCollectMedia",method = RequestMethod.GET)
+    /**
+     * 取消收藏
+     * @param mediaId
+     * @return
+     */
+    @RequestMapping(value = "/cancelCollectMedia",method = RequestMethod.GET)
     public ResultInfo cancelCollectMedia(@RequestParam int mediaId){
         return mediaService.cancelCollectMedia(mediaId);
+    }
+
+    /**
+     * 评论
+     * @param userId
+     * @param mediaId
+     * @param content
+     * @return
+     */
+    @RequestMapping(value = "/commentMedia",method = RequestMethod.GET)
+    public ResultInfo commentMedia(@RequestParam int userId,@RequestParam int mediaId,@RequestParam String content){
+        return mediaService.commentMedia(userId,mediaId,content);
+    }
+
+    /**
+     * 获取评论列表
+     * @param mediaId
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    @RequestMapping(value = "/getCommentList",method = RequestMethod.GET)
+    public ResultInfo getCommentList(@RequestParam int mediaId,@RequestParam int pageNo,@RequestParam int pageSize){
+        return mediaService.getCommentList(mediaId,pageNo,pageSize);
     }
 }
