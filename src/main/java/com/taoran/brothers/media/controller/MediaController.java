@@ -97,4 +97,9 @@ public class MediaController {
     public ResultInfo getCollectMediaList(@RequestParam int userId,@RequestParam int pageNo,@RequestParam int pageSize){
         return mediaService.getCollectMediaList(userId,pageNo,pageSize);
     }
+
+    @RequestMapping(value = "cancelCollectMedia",method = RequestMethod.GET)
+    public ResultInfo cancelCollectMedia(@RequestParam int mediaId){
+        return mediaService.cancelCollectMedia(mediaId);
+    }
 }

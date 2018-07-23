@@ -131,6 +131,16 @@ public class MediaService {
             if (page != null) {
                 List<Media> list = page.getContent();
                 if (list != null && list.size() > 0) {
+                    for(Media media : list){
+                        long count = collectMediaDAO.countByMediaId(media.getMediaId());
+                        media.setCollectCount(count);
+                        CollectMedia collectMedia = collectMediaDAO.findByMediaIdAndUserId(media.getMediaId(),user.getUserId());
+                        if(collectMedia == null){
+                            media.setCollectFlag(0);
+                        }else{
+                            media.setCollectFlag(1);
+                        }
+                    }
                     resultInfo.setCode(0);
                     resultInfo.setSuccess(true);
                     map.put("resultList", list);
@@ -208,6 +218,17 @@ public class MediaService {
             resultInfo.setSuccess(true);
         }
 
+        return resultInfo;
+    }
+
+    @Transactional
+    public ResultInfo cancelCollectMedia(int mediaId) {
+        ResultInfo resultInfo = new ResultInfo();
+        int result = collectMediaDAO.deleteByMediaId(mediaId);
+        if(result == 1){
+            resultInfo.setSuccess(true);
+            resultInfo.setMessage("取消收藏成功");
+        }
         return resultInfo;
     }
 }

@@ -17,4 +17,8 @@ public interface CollectMediaDAO extends JpaRepository<CollectMedia,Integer> {
     public Page<CollectMedia> findByUserId(int userId, Pageable pageable);
 
     public Long countByMediaId(int mediaId);
+
+    public int deleteByMediaId(int mediaId);
+
+    public CollectMedia findByMediaIdAndUserId(int mediaId,int userId);
 }
