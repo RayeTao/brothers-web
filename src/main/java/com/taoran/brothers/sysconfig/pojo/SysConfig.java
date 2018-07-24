@@ -1,5 +1,9 @@
 package com.taoran.brothers.sysconfig.pojo;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -9,6 +13,9 @@ import javax.persistence.Id;
  * date: 2018-07-11 20:01
  */
 @Entity
+@Getter
+@Setter
+@ToString
 public class SysConfig {
     @Id
     @GeneratedValue
@@ -18,43 +25,4 @@ public class SysConfig {
     private String displayName;
     private String remark;
 
-    public int getConfigId() {
-        return configId;
-    }
-
-    public void setConfigId(int configId) {
-        this.configId = configId;
-    }
-
-    public String getConfigName() {
-        return configName;
-    }
-
-    public void setConfigName(String configName) {
-        this.configName = configName;
-    }
-
-    public String getConfigValue() {
-        return configValue;
-    }
-
-    public void setConfigValue(String configValue) {
-        this.configValue = configValue;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
 }

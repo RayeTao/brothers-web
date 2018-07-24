@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -253,12 +254,14 @@ public class MediaService {
 
     public ResultInfo  getCommentList(int mediaId,int pageNo,int pageSize){
         ResultInfo resultInfo = new ResultInfo();
-        Pageable pageable = new PageRequest(pageNo-1,pageSize);
+        Sort sort = new Sort(Sort.Direction.DESC,"createTime");
+        Pageable pageable = new PageRequest(pageNo-1,pageSize,sort);
+
         Page<Comment> commentPage = commentDAO.findByMediaId(mediaId,pageable);
 
         if(commentPage != null){
             List<Comment> list = commentPage.getContent();
-            for(Comment comment : list){
+            for(Comment comment : list) {
                 User user = userDAO.findOne(comment.getUserId());
                 comment.setUserName(user.getUserName());
             }
@@ -266,6 +269,9 @@ public class MediaService {
             map.put("resultList",commentPage.getContent());
             resultInfo.setSuccess(true);
             resultInfo.setData(map);
+
+            long count = commentDAO.countByMediaId(mediaId);
+            map.put("totalCount", count);
         }
         return  resultInfo;
     }

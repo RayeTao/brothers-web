@@ -79,4 +79,13 @@ public ResultInfo getUserList() throws Exception{
     return resultInfo;
 }
 
+    public ResultInfo editInfo(int userId, String userName, String birthday, String phone, String address) {
+    ResultInfo resultInfo = new ResultInfo();
+    int result = userDAO.editInfo(userName,birthday,phone,address,userId);
+    if(result != 0){
+        resultInfo.setSuccess(true);
+        resultInfo.setMessage("修改成功");
+    }
+    return  resultInfo;
+    }
 }

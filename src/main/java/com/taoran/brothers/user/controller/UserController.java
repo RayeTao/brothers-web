@@ -7,10 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -35,5 +32,20 @@ public class UserController {
     @RequestMapping(value = "/getUserList",method = RequestMethod.GET)
     public ResultInfo getUserList() throws Exception{
         return userService.getUserList();
+    }
+
+    /**
+     * 修改用户信息
+     * @param userId
+     * @param userName
+     * @param birthday
+     * @param phone
+     * @param address
+     * @return
+     */
+    @RequestMapping(value = "/editInfo",method = RequestMethod.GET)
+    public ResultInfo editInfo(@RequestParam int userId,@RequestParam String userName,@RequestParam String birthday,
+                               @RequestParam String phone,@RequestParam String address){
+        return userService.editInfo(userId,userName,birthday,phone,address);
     }
 }
