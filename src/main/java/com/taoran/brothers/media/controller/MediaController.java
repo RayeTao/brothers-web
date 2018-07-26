@@ -56,12 +56,13 @@ public class MediaController {
 
     /**
      * 下载多媒体
-     * @param mediaUrl
+     * @param filePath
      * @return
      */
     @RequestMapping(value = "/downloadMedia",method = RequestMethod.GET)
-    public ResultInfo downloadMedia(@RequestParam("mediaUrl") String  mediaUrl) {
-        return mediaService.downloadMedia(mediaUrl);
+    public ResultInfo downloadMedia(@RequestParam String  filePath,HttpServletResponse response) {
+
+        return mediaService.downloadMedia(filePath,response);
     }
 
     /**

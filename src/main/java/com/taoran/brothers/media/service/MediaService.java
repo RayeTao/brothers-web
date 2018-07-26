@@ -21,15 +21,16 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.*;
 
 /**
@@ -162,10 +163,28 @@ public class MediaService {
         return resultInfo;
     }
 
-    public ResultInfo downloadMedia(String mediaUrl) {
+    public ResultInfo downloadMedia(String filePath,HttpServletResponse response) {
         ResultInfo resultInfo = new ResultInfo();
         try {
-        } catch (Exception e) {
+            File f = new File("E://git//brothers//MediaRoot//images//陶然//10451281-8500-4c0d-a2b5-2a8359b64ee4.png");
+            if (!f.exists()) {
+                response.sendError(404, "File not found!");
+                return resultInfo;
+            }
+            BufferedInputStream br = new BufferedInputStream(new FileInputStream(f));
+            byte[] buf = new byte[1024];
+            int len = 0;
+            response.reset();
+            response.setContentType("application/octet-stream");
+            response.setHeader("Content-Disposition", "attachment; filename=" + "1.png");
+            OutputStream out = response.getOutputStream();
+            while ((len = br.read(buf)) > 0) out.write(buf, 0, len);
+            br.close();
+            out.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return resultInfo;
     }
