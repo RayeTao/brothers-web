@@ -26,6 +26,7 @@ public class Media {
     private Long size;
     private String remark;
     private String localMediaPath;
+    private String thumbMediaUrl;
 
     @Transient
     private int collectFlag;

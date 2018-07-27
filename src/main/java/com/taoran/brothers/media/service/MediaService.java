@@ -81,15 +81,24 @@ public class MediaService {
     public boolean saveFile(int userId, String userName, MultipartFile file) {
 
         String basePath = "";
+        String thumbBasePath = "";
         SysConfig sysConfigPath = sysConfigDAO.findByConfigName(Constant.CONFIG_IMAGE_BASE_FILE_PATH);
         if (sysConfigPath != null) {
             basePath = sysConfigPath.getConfigValue();
+        }
+        SysConfig sysConfigThumbPath = sysConfigDAO.findByConfigName(Constant.CONFIG_IMAGE_BASE_THUMB_FILE_PATH);
+        if(sysConfigThumbPath != null){
+            thumbBasePath = sysConfigThumbPath.getConfigValue();
         }
 
         String filePath = userName + "/";
         File mediaFile = new File(basePath + filePath);
         if (!mediaFile.exists()) {
             mediaFile.mkdirs();
+        }
+        File thumbMediaFile = new File(thumbBasePath + filePath);
+        if(!thumbMediaFile.exists()){
+            thumbMediaFile.mkdirs();
         }
         if (!file.isEmpty()) {
             try {
@@ -102,7 +111,9 @@ public class MediaService {
                 file.transferTo(new File(saveFilePath));
 
                 //图片尺寸不变，压缩图片文件大小
-                Thumbnails.of(saveFilePath).scale(1f).outputQuality(0.25f).toFile(saveFilePath);
+                //压缩图片存放路径下
+                String saveThumbPath = thumbBasePath + filePath + uuid + mediaType;
+                Thumbnails.of(saveFilePath).scale(1f).outputQuality(0.25f).toFile(saveThumbPath);
 
                 //meidia信息保存到数据库中
                 Media media = new Media();
@@ -116,7 +127,9 @@ public class MediaService {
                 SysConfig sysConfigUrl = sysConfigDAO.findByConfigName(Constant.CONFIG_IMAGE_BASE_URL);
                 if (sysConfigUrl != null) {
                     media.setMediaUrl(sysConfigUrl.getConfigValue() + filePath + uuid + mediaType);
+                    media.setThumbMediaUrl(sysConfigUrl.getConfigValue()+"thumb/" + filePath + uuid + mediaType);
                 }
+
                 mediaDAO.save(media);
                 return true;
             } catch (Exception e) {
